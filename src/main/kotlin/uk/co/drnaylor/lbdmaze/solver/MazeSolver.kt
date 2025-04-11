@@ -5,5 +5,5 @@ import uk.co.drnaylor.lbdmaze.data.Direction
 
 interface MazeSolver {
 
-    fun nextStep(id: String, enteredFrom: Direction, availableDirections: List<Direction>): Direction
+    fun nextStep(id: String, enteredFrom: Direction?, availableDirections: List<Direction>): Direction
 }

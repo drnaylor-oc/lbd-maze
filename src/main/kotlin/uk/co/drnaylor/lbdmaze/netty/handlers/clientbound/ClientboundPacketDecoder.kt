@@ -8,13 +8,14 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame
 import io.netty.handler.codec.http.websocketx.WebSocketFrame
 import kotlinx.serialization.json.Json
 import uk.co.drnaylor.lbdmaze.netty.packets.clientbound.S2CCell
+import uk.co.drnaylor.lbdmaze.util.Logging
 
-class ClientboundWebsocketFrameHandler : SimpleChannelInboundHandler<WebSocketFrame>() {
+class ClientboundPacketDecoder : SimpleChannelInboundHandler<WebSocketFrame>() {
 
     override fun channelRead0(ctx: ChannelHandlerContext, msg: WebSocketFrame) {
         when (msg) {
             is TextWebSocketFrame -> {
-                println("[ClientboundWebsocketFrameHandler]: Received ${msg.text()}")
+                Logging.debug("[ClientboundWebsocketFrameHandler]: Received ${msg.text()}")
                 // We are only expecting one json message here, but if we had multiple
                 // checks would be done here to decode the right message.
                 val decoded = Json.decodeFromString<S2CCell>(msg.text())
@@ -22,10 +23,10 @@ class ClientboundWebsocketFrameHandler : SimpleChannelInboundHandler<WebSocketFr
                 ctx.fireChannelRead(decoded)
             }
             is PongWebSocketFrame -> {
-                println("[ClientboundWebsocketFrameHandler]: Received pong frame. Ignoring.")
+                Logging.debug("[ClientboundWebsocketFrameHandler]: Received pong frame. Ignoring.")
             }
             is CloseWebSocketFrame -> {
-                println("[ClientboundWebsocketFrameHandler] Close frame received. Closing websocket.")
+                Logging.debug("[ClientboundWebsocketFrameHandler] Close frame received. Closing websocket.")
                 ctx.close()
             }
         }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import uk.co.drnaylor.lbdmaze.netty.initialiser.WebsocketChannelInitialiser
+import uk.co.drnaylor.lbdmaze.util.Logging
 import java.net.URI
 
 
@@ -24,17 +25,17 @@ class WebsocketClient private constructor(private val uri: URI, sslContext: SslC
 
     suspend fun kickoff(): Unit = coroutineScope {
         // Once this is connected, the system will send packets back and forth as appropriate until it's done.
-        println("[WebsocketClient] Attempting to connect to $uri")
+        Logging.debug("[WebsocketClient] Attempting to connect to $uri")
         val channel = bootstrap.connect(uri.host, uri.port).sync().channel()
 
-        println("[WebsocketClient] Channel open.")
-        println("[WebsocketClient] Handlers in pipeline: ${channel.pipeline().names()}")
+        Logging.debug("[WebsocketClient] Channel open.")
+        Logging.debug("[WebsocketClient] Handlers in pipeline: ${channel.pipeline().names()}")
         launch {
             while (channel.isActive) {
                 delay(500)
             }
             eventGroup.shutdownGracefully().awaitUninterruptibly()
-            println("[WebsocketClient] Channel closed.")
+            Logging.debug("[WebsocketClient] Channel closed.")
         }
     }
 

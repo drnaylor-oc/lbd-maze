@@ -7,11 +7,12 @@ import io.netty.handler.codec.http.HttpObjectAggregator
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler
 import io.netty.handler.ssl.SslContext
 import uk.co.drnaylor.lbdmaze.netty.handlers.clientbound.ClientboundWebsocketHandshakeHandler
+import uk.co.drnaylor.lbdmaze.util.Logging
 import java.net.URI
 
 class WebsocketChannelInitialiser(private val uri: URI, private val sslContext: SslContext?) : ChannelInitializer<SocketChannel>() {
     override fun initChannel(ch: SocketChannel) {
-        println("[WebsocketChannelInitialiser] Creating pipeline.")
+        Logging.debug("[WebsocketChannelInitialiser] Creating pipeline.")
         val p = ch.pipeline();
         if (sslContext != null) {
             p.addLast(sslContext.newHandler(ch.alloc(), uri.host, uri.port));

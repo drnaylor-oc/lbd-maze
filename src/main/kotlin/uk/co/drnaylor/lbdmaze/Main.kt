@@ -6,6 +6,7 @@ import uk.co.drnaylor.lbdmaze.netty.WebsocketClient
 fun main(args: Array<String>) {
     val id: String = if (args.isEmpty()) {
         "D32TSM4HQC4SA"
+        // Large -- "GY524NRQMK762"
     } else {
         args[0]
     }
